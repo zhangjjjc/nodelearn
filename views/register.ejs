@@ -41,6 +41,15 @@
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-envelope"></span>
+                                </span>
+                                <input type="text" class="form-control" id="email" name="email" placeholder="请输入邮箱">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-lock"></span>
                                 </span>
                                 <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码">
@@ -73,7 +82,38 @@
         $(function () {
             $('form').on('click', '#login', function () {
                 location.href = '/login';
-            })
+            });
+
+            $('form').on('click', '#register', function () {
+                var username = $.trim($('#username').val());
+                var email = $.trim($('#email').val());
+                var password = $.trim($('#password').val());
+                var repassword = $.trim($('#repassword').val());
+
+                if (!username){
+                    $('#username').css('border', '1px solid red');
+                }else if (!email){
+                    $('#email').css('border', '1px solid red');
+                }else if (password != repassword){
+                    $('#password').css('border', '1px solid red');
+                    $('#repassword').css('border', '1px solid red');
+                }else if (password === repassword){
+                    var userinfo = {"username" : username, "email" : email, "password" : password};
+                    $.ajax({
+                        url : '/register',
+                        type : 'POST',
+                        data : userinfo,
+                        success : function (data, status) {
+                            if (status == 'success'){
+                                location.href = 'login';
+                            }
+                        },
+                        error : function (data, err) {
+                            location.href = 'register';
+                        }
+                    });
+                }
+            });
         });
     </script>
 </body>

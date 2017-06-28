@@ -20,13 +20,11 @@
 <body>
 <div class="container">
     <%- message %>
-    <form class="col-sm-offset-4 col-sm-4 form-horizontal" method="post" onsubmit="return false">
+    <form class="col-sm-offset-4 col-sm-4 form-horizontal" method="post" onsubmit="return false;">
         <fieldset>
             <legend></legend>
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <p class="tc">请先登录</p>
-                </div>
+                <div class="panel-heading tc">请先登录</div>
 
                 <div class="panel-body m15">
                     <div class="form-group">
@@ -64,7 +62,40 @@
     $(function () {
         $('form').on('click', '#register', function () {
             location.href = '/register';
-        })
+        });
+
+        $('form').on('click', '#login', function () {
+            var username = $('#username');
+            var usernameVal = $.trim(username.val());
+            var password = $('#password');
+            var passwordVal = $.trim(password.val());
+            var errorTip = '<div class="alert alert-warning">{0}</div>';
+
+            if (!usernameVal){
+                $('.container').prepend('<div class="alert alert-warning">请输入用户名</div>');
+                username.focus();
+//                $('#username').css('border', '1px solid red');
+            }else if (!passwordVal){
+                $('.container').prepend('<div class="alert alert-warning">请输入密码</div>');
+                password.focus();
+//                $('#password').css('border', '1px solid red');
+            }else {
+                var authinfo = {"username" : usernameVal, "password" : passwordVal};
+                $.ajax({
+                    url : '/login',
+                    type : 'POST',
+                    data : authinfo,
+                    success : function (data, status) {
+                        if (status == 'success'){
+                            location.href = 'home';
+                        }
+                    },
+                    error : function (data, err) {
+                        location.href = 'login';
+                    }
+                });
+            }
+        });
     });
 </script>
 </body>
